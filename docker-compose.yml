@@ -1,26 +1,19 @@
 version: '3.8'
 
 services:
-  ocr_server:
+  ocr_service:
     build:
-      context: ./server
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "50051:50051"
+      - "8080:8080"
     volumes:
+      - ./logs:/app/logs
       - ./temp_image:/app/temp_image
+    restart: unless-stopped
     networks:
-      - ocr_network
-
-  client:
-    build:
-      context: ./client
-    depends_on:
-      - ocr_server
-    networks:
-      - ocr_network
-    volumes:
-      - ./sample.pdf:/app/sample.pdf
+      - shared_network
 
 networks:
-  ocr_network:
-    driver: bridge
+  shared_network:
+    external: true

@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  ocr_server:
+    build:
+      context: ./server
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./temp_image:/app/temp_image
+    networks:
+      - ocr_network
+
+  client:
+    build:
+      context: ./client
+    depends_on:
+      - ocr_server
+    networks:
+      - ocr_network
+    volumes:
+      - ./sample.pdf:/app/sample.pdf
+
+networks:
+  ocr_network:
+    driver: bridge
